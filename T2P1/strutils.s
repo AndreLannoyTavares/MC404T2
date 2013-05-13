@@ -27,6 +27,24 @@ head:
 	pop {pc}
 
 
+	@ ###### Divisão ######
+
+
+.text
+@ Cálcula a divisão de r0 por r1. Retorna o resultado em r0, e o resto em r1
+@ Parametros:
+@ 	- Número inteiro de 32 bits (dividendo)
+@ 	- Número inteiro de 32 bits (divisor)
+@ Saída:
+@	- Número inteiro de 32 bits (quociente)
+@	- Número inteiro de 32 bits (sobra)
+
+my_div:
+	push {lr}
+	@ FUNCTION HERE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+	pop {pc}
+
+
 	@ ###### Valor Absoluto -> Complemento de Dois ######
 
 
@@ -43,8 +61,6 @@ para_comp_dois:
 	add r0, r0, #1		@<<<<<<
 	pop {pc}
 
-
-
 	@ ###### Complemento de Dois -> Valor Absoluto ######
 
 
@@ -57,7 +73,7 @@ para_comp_dois:
 
 de_comp_dois:
 	push {lr}
-	sub r0, r0, #1
+	sub r0, r0, #1		@<<<<<<
 	mvn r0, r0
 	pop {pc}	
 
@@ -206,6 +222,15 @@ my_atoi:
 
 my_itoah:
 	push {lr}
+	
+	mov r2, #0x10					@ r2 recebe o valor da base (16)
+	@testar caso em que r0 < 16
+	mov r3, #0x1					@ Inicializa o contador
+itoah_in_loop:
+	mov r4, r3
+	mul r3, r2, r4					@ r3 recebe a próxima potencia de r2
+	cmp r3, r0
+	bcc itoah_in_loop				@ enquanto r3 for menor que o número recebido
 
 	pop {pc}
 
