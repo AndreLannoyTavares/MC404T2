@@ -44,6 +44,7 @@ para_comp_dois:
 	pop {pc}
 
 
+
 	@ ###### Complemento de Dois -> Valor Absoluto ######
 
 
@@ -59,6 +60,37 @@ de_comp_dois:
 	sub r0, r0, #1
 	mvn r0, r0
 	pop {pc}	
+
+
+	@ ###### Valor ASCII -> Valor Numérico ######
+
+
+.text
+@ Cálculo de um valor numérico a partir de um caracter ASCII
+@ Parametros:
+@ 	- Número inteiro de 32 bits (Valor ASCII)
+@ Saída:
+@	- Número inteiro de 32 bits
+
+my_ctoi:
+	push {lr}
+
+	mov r1, #0x61	
+	cmp r0, r1
+	bcc ctoi_not_a 					@ se r0 igual a o maior que 'a'	
+	sub r0, r0, #0x57				@ subtrai um valor tal que 'a'->10, 'b'->11 e assim por diante
+	pop {pc}
+
+ctoi_not_a:
+	mov r1, #0x41
+	cmp r0, r1
+	bcc ctoi_not_A					@ se r0 igual a o maior que 'A'
+	sub r0, r0, #0x37				@ subtrai um valor tal que 'A'->10, 'B'->11 e assim por diante
+	pop {pc}	
+
+ctoi_not_A:						@ se o caracter em r0 é v;alido e é menor que 'A', está entre 0 e 9 
+	sub r0, r0, #0x30				@ subtraimos um valor tal que '0'->0, '1'->1 e assim por diante
+	pop {pc}
 
 
 	@ ###### Cadeia de Hexadecimais -> Inteiro ######
@@ -85,6 +117,11 @@ my_ahtoi:
 	bne ahtoi_count					@ se o primeiro digito for um número, começa o cálculo 
 	add r0, r0, #4		@<<<<<<			@ calcula o próximo endereço
 	ldr r1, [r0]					@ r1 recebe o próximo digito
+	push {r0, r2, r3}
+	mov r0, r1
+	bl my_ctoi					@ converte o valor ASCII de r1 para o valor numérico
+	mov r1, r0
+	pop {r0, r2, r3}
 	mov r5, #1					@ marca que o número é negativo
 
 ahtoi_count:
@@ -97,6 +134,11 @@ ahtoi_loop:						@ faça
 	add r0, r0, #4		@<<<<<<			@ calcula o novo endereço
 	ldr r1, [r0]					@ r1 recebe o próximo digito
 	cmp r1, #0
+	push {r0, r2, r3}
+	mov r0, r1
+	bl my_ctoi					@ converte o valor ASCII de r1 para o valor numérico
+	mov r1, r0
+	pop {r0, r2, r3}
 	beq comp_loop					@ enquanto str for diferente de '\0'
 	mov r3, r0		@<<<<<<			@ posiciona o resultado no registrador correto
 
