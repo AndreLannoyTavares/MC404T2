@@ -1,4 +1,4 @@
-cricao: 	exemplo de programa escrito em C que chama uma 
+/* cricao: 	exemplo de programa escrito em C que chama uma 
  *		funcão definida em linguagem de montagem.
  * Author:	Divino César
  * Data:	08 de maio de 2013
@@ -6,13 +6,13 @@ cricao: 	exemplo de programa escrito em C que chama uma
  */
 #include <stdio.h>
 
-extern int my_strlen(char *str);
+extern int my_strcmp(char *str1, char *str2);
 
 int main(int argc, char *argv[]) {
 
-	int len = my_strlen(argv[1]);
+	int res = my_strcmp(argv[1], argv[2]);
 
-	printf("my_strlen(%s) = %d\n", argv[1], len);
+	printf("my_strcmp(%s, %s) = %d\n", argv[1], argv[2], res);
 
 	return 0;	
 }

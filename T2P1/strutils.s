@@ -155,7 +155,7 @@ my_ahtoi:
 	mov r2, #0x2D		@<<<<<<			@ r2 recebe o valor de '-' na tabela ASCII
 	cmp r1, r2
 	bne ahtoi_count					@ se o primeiro digito for um número, começa o cálculo 
-	add r0, r0, #4		@<<<<<<			@ calcula o próximo endereço
+	add r0, r0, #1					@ calcula o próximo endereço
 	ldr r1, [r0]					@ r1 recebe o próximo digito
 	push {r0, r2, r3}
 	mov r0, r1
@@ -171,7 +171,7 @@ ahtoi_count:
 ahtoi_loop:						@ faça
 	mul r2, r3, r4					@ multiplica o valor acumulado pela base (16)
 	add r3, r2, r1					@ soma o valor recem lido
-	add r0, r0, #4		@<<<<<<			@ calcula o novo endereço
+	add r0, r0, #1					@ calcula o novo endereço
 	ldr r1, [r0]					@ r1 recebe o próximo digito
 	cmp r1, #0
 	push {r0, r2, r3}
@@ -255,12 +255,15 @@ my_itoa:
 	@ se for, calculamos a volta do complemento de dois
 	@ setamos a flag de negativos
 
-	@ pot = 1
-	@ criamos um apontador para o local de pot na pilha	
-	@ enquanto pot for menor que número da entrada
-		@ colocamos pot na pilha
-		@ atualizamos o apontador da pilha
-		@ pot = pot * base
+	mov r4, #0x10
+	mov r2, #1					@ pot = 1
+							@ criamos um apontador para o local de pot na pilha	
+itoa_loop:						@ enquanto pot for menor que número da entrada
+								@ colocamos pot na pilha
+								@ atualizamos o apontador da pilha
+	mul r3, r2, r4						
+	mov r3, r2						@ pot = pot * base
+	cmp r3, r0
 
 	@ enquanto o número da entrada for diferente que zero
 		@ desempilhamos a próxima potência
@@ -304,33 +307,20 @@ my_strcmp:
 	push {lr}
 
 comp_loop:						@ faça
-	mov r2, #0					@ guardamos em r2 o código ASCII de '\0'
-	ldr r3, [r0]
-	cmp r3, r2					@ se str1 for igual a '\0'
-	beq comp					@ pula para comp			
-	ldr r3, [r1]	
-	cmp r3, r2					@ se str2 for igual a '\0'
-	beq comp					@ pula para comp
-	add r0, r0, #4	 @checar #4			@ str1 recebe o próximo endereço após str1
-	add r1, r1, #4	 @checar #4			@ str2 recebe o próximo endereço após str2 
-	ldr r2, [r0]
-	ldr r3, [r1]
+	ldrb r2, [r0], #1				@ carrega o próximo caracter da primeira string, atualiza o apontador
+	ldrb r3, [r1], #1				@ carrega o próximo caracter da segunda string, atualiza o apontador
 	cmp r2, r3
-	beq comp_loop					@ enquanto str1 for igual a str2
-
-comp:
-	ldr r2, [r0]
-	ldr r3, [r1]
-	cmp r2, r3					@ se str1 - str2 = 0
-	beq comp_0					@ então retorna 0
-	cmp r2, r3					@ se não se str1 - str2 > 0
-	beq comp_1					@ então retorna 1
-	mov r0, #2 	@checar código do -1		@ se não retorna -1
-	pop {pc}	
-
-comp_0:
+	bne comp					@ sai do loop se str1 não for igual a str2
+	cmp r2, #0					@ se r2 == r3 == 0 == '\0', chegamos ao fim, e as strings são iguais
+	bne comp_loop					@ se não, repete o loop
 	mov r0, #0
 	pop {pc}
+
+comp:
+	cmp r2, r3					
+	bcs comp_1					@ se r2 > r3m retorna 1
+	mov r0, #-1 					@ se não, retorna -1
+	pop {pc}	
 
 comp_1:
 	mov r0, #1
