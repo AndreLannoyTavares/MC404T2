@@ -77,20 +77,44 @@ my_ctoi:
 
 	mov r1, #0x61	
 	cmp r0, r1
-	bcc ctoi_not_a 					@ se r0 igual a o maior que 'a'	
+	bcc ctoi_not_a 					@ se r0 igual a ou maior que 'a'	
 	sub r0, r0, #0x57				@ subtrai um valor tal que 'a'->10, 'b'->11 e assim por diante
 	pop {pc}
 
 ctoi_not_a:
 	mov r1, #0x41
 	cmp r0, r1
-	bcc ctoi_not_A					@ se r0 igual a o maior que 'A'
+	bcc ctoi_not_A					@ se r0 igual a ou maior que 'A'
 	sub r0, r0, #0x37				@ subtrai um valor tal que 'A'->10, 'B'->11 e assim por diante
 	pop {pc}	
 
-ctoi_not_A:						@ se o caracter em r0 é v;alido e é menor que 'A', está entre 0 e 9 
+ctoi_not_A:						@ se o caracter em r0 é válido e é menor que 'A', está entre 0 e 9 
 	sub r0, r0, #0x30				@ subtraimos um valor tal que '0'->0, '1'->1 e assim por diante
 	pop {pc}
+
+
+	@ ###### Valor Numérico -> Valor ASCII ######
+
+
+.text
+@ Cálculo de um caracter ASCII partir de um valor numérico 
+@ Parametros:
+@ 	- Número inteiro de 32 bits 
+@ Saída:
+@	- Número inteiro de 32 bits (Valor ASCII)
+
+my_itoc:
+	push {lr}
+
+	mov r1, #0x09	
+	cmp r0, r1
+	bcc ctoi_not_a 					@ se r0 igual a ou maior que 10->'A'	
+	add r0, r0, #0x57				@ adicionamos um valor tal que 10->'A', 11->'B' e assim por diante
+	pop {pc}
+
+itoc_not_a:
+	add r0, r0, #0x30				@ adicionamos um valor tal que '0'<-0, '1'<-1 e assim por diante
+	pop {pc}	
 
 
 	@ ###### Cadeia de Hexadecimais -> Inteiro ######
