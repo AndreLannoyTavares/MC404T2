@@ -249,6 +249,36 @@ itoah_in_loop:
 my_itoa:
 	push {lr}
 
+	@ testamos o primeiro bit para saber se o número e negativo
+	@ se for, calculamos a volta do complemento de dois
+	@ setamos a flag de negativos
+
+	@ pot = 1
+	@ enquanto pot for menor que número da entrada
+		@ colocamos pot na pilha
+		@ pot = pot * base
+	@ pot = pot / base
+	@ criamos um apontador para o local de pot na pilha	
+
+	@ enquanto o número da entrada for diferente que zero
+		@ zeramos o contador de unidades
+		@ enquanto o número da entrada for maior que ou igual à potência
+			@ subtraimos a potência da entrada
+			@ aumentamos o contador de unidades
+		@ adionamos o contador de unidades à pilha
+		@ desempilhamos a próxima potência
+	
+	@ se a flag dos negativos estiver setada
+		@ escreve '-' no primeiro digito
+		@ aponta para o próximo digito
+
+	@ enquanto não voltamos o stack pointer para sua posição original
+		@ desempilha um digito
+		@ guarda o digito no apontador atual
+		@ aponta para o próximo dígito
+
+	@ insere o '\0' no digito atual 
+
 	pop {pc}
 
 
