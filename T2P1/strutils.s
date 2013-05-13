@@ -147,7 +147,7 @@ itoc_not_a:
 
 my_ahtoi:
 	push {lr}
-	push {r4, r5}					@ constante da base numérica (16) e flag de negativos
+	push {r4, r5}		@<<<<<<			@ constante da base numérica (16) e flag de negativos 
 	mov r4, #0x10
 	mov r5, #0
 
@@ -187,7 +187,7 @@ ahtoi_loop:						@ faça
 	bl para_comp_dois				@ calcula o complemtento de dois do valor acumulado (transforma em negativo)
 	
 ahtoi_end:
-	pop {r4, r5}
+	pop {r4, r5}		@<<<<<<
 	pop {pc}
 
 
@@ -249,24 +249,27 @@ itoah_in_loop:
 my_itoa:
 	push {lr}
 
+	@ empilhamos os registradores >= r4
+
 	@ testamos o primeiro bit para saber se o número e negativo
 	@ se for, calculamos a volta do complemento de dois
 	@ setamos a flag de negativos
 
 	@ pot = 1
+	@ criamos um apontador para o local de pot na pilha	
 	@ enquanto pot for menor que número da entrada
 		@ colocamos pot na pilha
+		@ atualizamos o apontador da pilha
 		@ pot = pot * base
-	@ pot = pot / base
-	@ criamos um apontador para o local de pot na pilha	
 
 	@ enquanto o número da entrada for diferente que zero
+		@ desempilhamos a próxima potência
 		@ zeramos o contador de unidades
 		@ enquanto o número da entrada for maior que ou igual à potência
 			@ subtraimos a potência da entrada
 			@ aumentamos o contador de unidades
 		@ adionamos o contador de unidades à pilha
-		@ desempilhamos a próxima potência
+		@ aumentamos o contador de dígitos da string
 	
 	@ se a flag dos negativos estiver setada
 		@ escreve '-' no primeiro digito
@@ -279,6 +282,8 @@ my_itoa:
 
 	@ insere o '\0' no digito atual 
 
+	@ desempilhamos os registradores >= r4
+  
 	pop {pc}
 
 

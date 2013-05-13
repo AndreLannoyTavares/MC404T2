@@ -1,5 +1,4 @@
-/*
- * Descricao: 	exemplo de programa escrito em C que chama uma 
+cricao: 	exemplo de programa escrito em C que chama uma 
  *		funcão definida em linguagem de montagem.
  * Author:	Divino César
  * Data:	08 de maio de 2013
