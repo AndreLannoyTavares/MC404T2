@@ -155,7 +155,7 @@ my_ahtoi:
 	mov r4, #0x10
 	mov r5, #0
 
-	ldrb r1, [r0]
+	@ ldrb r1, [r0]
 	@ mov r2, #0x2D		@<<<<<<			@ r2 recebe o valor de '-' na tabela ASCII
 	@ cmp r1, r2
 	@ bne ahtoi_count					@ se o primeiro digito for um número, começa o cálculo 
@@ -174,7 +174,6 @@ ahtoi_count:
 
 ahtoi_loop:						@ faça
 	push {r0, r2, r3}
-	mov r0, r1
 	bl my_ctoi					@ converte o valor ASCII de r1 para o valor numérico
 	mov r1, r0
 	pop {r0, r2, r3}
@@ -183,7 +182,7 @@ ahtoi_loop:						@ faça
 	add r0, r0, #1					@ calcula o novo endereço
 	ldrb r1, [r0]					@ r1 recebe o próximo digito
 	cmp r1, #0
-	bne comp_loop					@ enquanto str for diferente de '\0'
+	bne ahtoi_loop					@ enquanto str for diferente de '\0'
 	mov r0, r3		@<<<<<<			@ posiciona o resultado no registrador correto
 
 	@ cmp r5, #0
