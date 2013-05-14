@@ -58,7 +58,7 @@ my_div:
 para_comp_dois:
 	push {lr}
 	mvn r0, r0
-	add r0, r0, #1		@<<<<<<
+	add r0, r0, #1	
 	pop {pc}
 
 
@@ -74,7 +74,7 @@ para_comp_dois:
 
 de_comp_dois:
 	push {lr}
-	sub r0, r0, #1		@<<<<<<
+	sub r0, r0, #1		
 	mvn r0, r0
 	pop {pc}	
 
@@ -151,27 +151,19 @@ itoc_not_a:
 
 my_ahtoi:
 	push {lr}
-	push {r4, r5}		@<<<<<<			@ constante da base numérica (16) e flag de negativos 
+	push {r4, r5}					@ constante da base numérica (16) e flag de negativos 
 	mov r4, #0x10
 	mov r5, #0
 
-	@ ldrb r1, [r0]
-	@ mov r2, #0x2D		@<<<<<<			@ r2 recebe o valor de '-' na tabela ASCII
-	@ cmp r1, r2
-	@ bne ahtoi_count					@ se o primeiro digito for um número, começa o cálculo 
-	@ add r0, r0, #1					@ calcula o próximo endereço
-	@ ldrb r1, [r0]					@ r1 recebe o próximo digito
-	@ push {r0, r2, r3}
-	@ mov r0, r1
-	@ bl my_ctoi					@ converte o valor ASCII de r1 para o valor numérico
-	@ mov r1, r0
-	@ pop {r0, r2, r3}
-	@ mov r5, #1					@ marca que o número é negativo
+	ldrb r1, [r0]
+	mov r2, #0x2D					@ r2 recebe o valor de '-' na tabela ASCII
+	cmp r1, r2
+	bne ahtoi_count					@ se o primeiro digito for um número, começa o cálculo 
+	add r0, r0, #1					@ calcula o próximo endereço
+	mov r5, #1					@ marca que o número é negativo
 
 ahtoi_count:
-	@ mov r2, #0					@ r2 recebe o valor de '\0'
 	mov r3, #0					@ inicializa o acumulador
-
 ahtoi_loop:						@ faça
 	push {r0, r2, r3}
 	bl my_ctoi					@ converte o valor ASCII de r1 para o valor numérico
@@ -183,14 +175,14 @@ ahtoi_loop:						@ faça
 	ldrb r1, [r0]					@ r1 recebe o próximo digito
 	cmp r1, #0
 	bne ahtoi_loop					@ enquanto str for diferente de '\0'
-	mov r0, r3		@<<<<<<			@ posiciona o resultado no registrador correto
+	mov r0, r3					@ posiciona o resultado no registrador correto
 
-	@ cmp r5, #0
-	@ beq ahtoi_end
-	@ bl para_comp_dois				@ calcula o complemtento de dois do valor acumulado (transforma em negativo)
+	cmp r5, #0
+	beq ahtoi_end
+	bl para_comp_dois				@ calcula o complemtento de dois do valor acumulado (transforma em negativo)
 	
 ahtoi_end:
-	pop {r4, r5}		@<<<<<<
+	pop {r4, r5}		
 	pop {pc}
 
 
@@ -208,7 +200,38 @@ ahtoi_end:
 
 my_atoi:
 	push {lr}
+	push {r4, r5}					@ constante da base numérica (10) e flag de negativos 
+	mov r4, #0x0A
+	mov r5, #0
 
+	ldrb r1, [r0]
+	mov r2, #0x2D					@ r2 recebe o valor de '-' na tabela ASCII
+	cmp r1, r2
+	bne atoi_count					@ se o primeiro digito for um número, começa o cálculo 
+	add r0, r0, #1					@ calcula o próximo endereço
+	mov r5, #1					@ marca que o número é negativo
+
+atoi_count:
+	mov r3, #0					@ inicializa o acumulador
+atoi_loop:						@ faça
+	push {r0, r2, r3}
+	bl my_ctoi					@ converte o valor ASCII de r1 para o valor numérico
+	mov r1, r0
+	pop {r0, r2, r3}
+	mul r2, r3, r4					@ multiplica o valor acumulado pela base (16)
+	add r3, r2, r1					@ soma o valor recem lido
+	add r0, r0, #1					@ calcula o novo endereço
+	ldrb r1, [r0]					@ r1 recebe o próximo digito
+	cmp r1, #0
+	bne atoi_loop					@ enquanto str for diferente de '\0'
+	mov r0, r3					@ posiciona o resultado no registrador correto
+
+	cmp r5, #0
+	beq atoi_end
+	bl para_comp_dois				@ calcula o complemtento de dois do valor acumulado (transforma em negativo)
+	
+atoi_end:
+	pop {r4, r5}		
 	pop {pc}
 
 
