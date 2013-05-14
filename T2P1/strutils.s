@@ -61,6 +61,7 @@ para_comp_dois:
 	add r0, r0, #1		@<<<<<<
 	pop {pc}
 
+
 	@ ###### Complemento de Dois -> Valor Absoluto ######
 
 
@@ -81,24 +82,27 @@ de_comp_dois:
 	@ ###### Valor ASCII -> Valor Numérico ######
 
 
+.globl my_ctoi
+
 .text
 @ Cálculo de um valor numérico a partir de um caracter ASCII
 @ Parametros:
-@ 	- Número inteiro de 32 bits (Valor ASCII)
+@ 	- Endereço para um número inteiro de 32 bits (Valor ASCII)
 @ Saída:
 @	- Número inteiro de 32 bits
 
 my_ctoi:
 	push {lr}
 
-	mov r1, #0x61	
+	ldrb r0, [r0]					@ acessa o conteudo do endereço
+	mov r1, #0x61					@ 0x61: valor ASCII do 'a'
 	cmp r0, r1
 	bcc ctoi_not_a 					@ se r0 igual a ou maior que 'a'	
 	sub r0, r0, #0x57				@ subtrai um valor tal que 'a'->10, 'b'->11 e assim por diante
 	pop {pc}
 
 ctoi_not_a:
-	mov r1, #0x41
+	mov r1, #0x41					@ 0x41: valor ASCII do 'A'
 	cmp r0, r1
 	bcc ctoi_not_A					@ se r0 igual a ou maior que 'A'
 	sub r0, r0, #0x37				@ subtrai um valor tal que 'A'->10, 'B'->11 e assim por diante
@@ -151,40 +155,40 @@ my_ahtoi:
 	mov r4, #0x10
 	mov r5, #0
 
-	ldr r1, [r0]
-	mov r2, #0x2D		@<<<<<<			@ r2 recebe o valor de '-' na tabela ASCII
-	cmp r1, r2
-	bne ahtoi_count					@ se o primeiro digito for um número, começa o cálculo 
-	add r0, r0, #1					@ calcula o próximo endereço
-	ldr r1, [r0]					@ r1 recebe o próximo digito
-	push {r0, r2, r3}
-	mov r0, r1
-	bl my_ctoi					@ converte o valor ASCII de r1 para o valor numérico
-	mov r1, r0
-	pop {r0, r2, r3}
-	mov r5, #1					@ marca que o número é negativo
+	ldrb r1, [r0]
+	@ mov r2, #0x2D		@<<<<<<			@ r2 recebe o valor de '-' na tabela ASCII
+	@ cmp r1, r2
+	@ bne ahtoi_count					@ se o primeiro digito for um número, começa o cálculo 
+	@ add r0, r0, #1					@ calcula o próximo endereço
+	@ ldrb r1, [r0]					@ r1 recebe o próximo digito
+	@ push {r0, r2, r3}
+	@ mov r0, r1
+	@ bl my_ctoi					@ converte o valor ASCII de r1 para o valor numérico
+	@ mov r1, r0
+	@ pop {r0, r2, r3}
+	@ mov r5, #1					@ marca que o número é negativo
 
 ahtoi_count:
 	@ mov r2, #0					@ r2 recebe o valor de '\0'
 	mov r3, #0					@ inicializa o acumulador
 
 ahtoi_loop:						@ faça
-	mul r2, r3, r4					@ multiplica o valor acumulado pela base (16)
-	add r3, r2, r1					@ soma o valor recem lido
-	add r0, r0, #1					@ calcula o novo endereço
-	ldr r1, [r0]					@ r1 recebe o próximo digito
-	cmp r1, #0
 	push {r0, r2, r3}
 	mov r0, r1
 	bl my_ctoi					@ converte o valor ASCII de r1 para o valor numérico
 	mov r1, r0
 	pop {r0, r2, r3}
-	beq comp_loop					@ enquanto str for diferente de '\0'
-	mov r3, r0		@<<<<<<			@ posiciona o resultado no registrador correto
+	mul r2, r3, r4					@ multiplica o valor acumulado pela base (16)
+	add r3, r2, r1					@ soma o valor recem lido
+	add r0, r0, #1					@ calcula o novo endereço
+	ldrb r1, [r0]					@ r1 recebe o próximo digito
+	cmp r1, #0
+	bne comp_loop					@ enquanto str for diferente de '\0'
+	mov r0, r3		@<<<<<<			@ posiciona o resultado no registrador correto
 
-	cmp r5, #0
-	beq ahtoi_end
-	bl para_comp_dois				@ calcula o complemtento de dois do valor acumulado (transforma em negativo)
+	@ cmp r5, #0
+	@ beq ahtoi_end
+	@ bl para_comp_dois				@ calcula o complemtento de dois do valor acumulado (transforma em negativo)
 	
 ahtoi_end:
 	pop {r4, r5}		@<<<<<<

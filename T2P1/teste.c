@@ -6,13 +6,13 @@
  */
 #include <stdio.h>
 
-extern int my_strcmp(char *str1, char *str2);
+extern int my_ctoi(char *str1);
 
 int main(int argc, char *argv[]) {
 
-	int res = my_strcmp(argv[1], argv[2]);
+	int res = my_ctoi(argv[1]);
 
-	printf("my_strcmp(%s, %s) = %d\n", argv[1], argv[2], res);
+	printf("my_ctoi(%c) = %d\n", argv[1], res);
 
 	return 0;	
 }
