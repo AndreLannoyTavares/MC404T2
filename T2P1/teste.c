@@ -6,13 +6,13 @@
  */
 #include <stdio.h>
 
-extern int my_atoi(char *str1);
+extern char* my_itoa(int num);
 
 int main(int argc, char *argv[]) {
 
-	int res = my_atoi(argv[1]);
+	char* res = my_itoa((int) argv[1]);
 
-	printf("my_atoi(%s) = %d\n", argv[1], res);
+	printf("my_itoa(%d) = %s\n", (int) argv[1], res);
 
 	return 0;	
 }

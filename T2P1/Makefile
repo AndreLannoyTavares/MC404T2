@@ -1,9 +1,4 @@
-strutils.o:	
-	as -v strutils.s -o strutils.o 
-
-teste.o:
-	gcc -v -c teste.c -o teste.o 
-
-teste.x: 
-	gcc -v teste.o strutils.o -o teste.x
-	
+all:
+	as strutils.s -g -o strutils.o
+	gcc main.c -g -c 
+	gcc main.o strutils.o -g -o ex2

@@ -1,4 +1,4 @@
-@ Descricao: 	Conjunto de funcoes para manipulacão de vetores de caracteres
+cricao: 	Conjunto de funcoes para manipulacão de vetores de caracteres
 @		e conversão de bases.
 @ Author:	André Lannoy Tavares
 @ Data:		11 de maio de 2013
@@ -254,7 +254,7 @@ my_itoah:
 my_itoa:
 	push {lr}
 
-	push {r4, r5}		@ empilhamos os registradores >= r4
+	push {r4, r5, r6, r7, r8, r9, r10, r11}		@ empilhamos os registradores >= r4
 
 	@ testamos o primeiro bit para saber se o número e negativo
 	@ se for, calculamos a volta do complemento de dois
@@ -263,39 +263,42 @@ my_itoa:
 	mov r4, #0x0A					@ base 10
 	ldr r5, =result					@ r5 será nosso apontador pra "pilha" de resultados
 	mov r2, #1					@ pot = 1
+	@ ?						@ criamos um apontador para o local de pot na pilha	
 
 itoa_get_pot:						@ enquanto pot for menor que número da entrada
-	push {r2} @ str r2, [sp, #-4]!					@ colocamos pot na pilha
+	@ ?							@ colocamos pot na pilha
+	@ ?							@ atualizamos o apontador da pilha
 	mul r3, r2, r4						
-	mov r2, r3						@ pot = pot * base
+	mov r2, r2						@ pot = pot * base
 	cmp r2, r0
 	bcc itoa_get_pot
 
 itoa_out_loop:						@ enquanto o número da entrada for diferente que zero
-	pop {r2} @ldr r2, [sp], #-4 					@ desempilhamos a próxima potência
+	@ ? (pot em r2)						@ desempilhamos a próxima potência
 	mov r3, #0						@ zeramos o contador de unidades
-
 itoa_in_loop:							@ enquanto o número da entrada for maior que ou igual à potência
 	sub r0, r0, r2							@ subtraimos a potência da entrada
-	add r3, r3, #1							@ aumentamos o contador de unidades
-	cmp r0, r2
-	bcs itoa_in_loop
-	
-	str r3, [r1]						@ adionamos o contador de unidades à lista de resultados
-	add r1, r1, #1						@ corrige o apontador da lista de resultados
-	cmp r0, #0
-	bne itoa_out_loop
-	
+	add r3, r3, #0							@ aumentamos o contador de unidades
+	str r3, [r5]							@ adionamos o contador de unidades à lista de resultados
+	add r5, r5, #1							@ corrige o apontador da lista de resultados
 	
 							@ se a flag dos negativos estiver setada
 								@ escreve '-' no primeiro digito
 								@ aponta para o próximo digito
 
+itoa_get_result:					@ enquanto não voltamos a "pilha" (vetor) dos resultados para sua posição original
+	ldr r3, [r5]						@ desempilha um digito
+	sub r5, r5, #1						@ corrige o apontador da "pilha" de resultados
+	str r3, [r1]						@ guarda o digito no apontador atual
+	add r1, r1, #1						@ aponta para o próximo dígito
+	ldr r2, =result
+	cmp r5, r2
+	bne itoa_get_result
 
 	mov r3, #0
 	str r3, [r1]					@ insere o '\0' no digito atual 
 
-	pop {r4, r5} 		@ desempilhamos os registradores >= r4
+	pop {r4, r5, r6, r7, r8, r9, r10, r11} 		@ desempilhamos os registradores >= r4
   
 	pop {pc}
 
