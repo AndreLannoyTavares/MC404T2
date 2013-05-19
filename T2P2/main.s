@@ -13,6 +13,9 @@ main:
 
 	push {lr}
 
+	@ cmd_id =get_cmd
+
+	@ switch (cmd_id)
 
 	mov r0, #0
 	pop {pc}
