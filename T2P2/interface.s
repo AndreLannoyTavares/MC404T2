@@ -39,7 +39,7 @@ get_cmd:
 
 cod_exit:	.asciz		"exit"
 cod_si:		.asciz		"si"
-cod_sm:		.asciz		"sm"
+cod_sn:		.asciz		"sn"
 cod_c:		.asciz		"c"
 cod_stw:	.asciz		"stw"
 cod_p:		.asciz		"p"
@@ -68,7 +68,7 @@ id_cmd_c:
 	cmp r0, #0				@ testamos se o resultado de str_cmp foi -1, 0 e 1 antes de recuperarmos o primeiro parâmetro (r0)
 	pop {r0}
 	bne id_cmd_nr				@ se a string recebida for lexograficamente diferente de "c", ela não é um dos 7 comandos
-	ldr r0, #3				@ c = retornar 3	
+	mov r0, #3				@ c = retornar 3	
 	pop {pc}
 
 id_cmd_exit:
@@ -79,7 +79,7 @@ id_cmd_exit:
 	pop {r0}
 	bmi id_cmd_c				@ se a string recebida for lexograficamente menor que "exit", testamos "c"
 	bgt id_cmd_p				@ se a string recebida for lexograficamente maior que "exit", testamos "p"
-	ldr r0, #0				@ exit = retornar 0	
+	mov r0, #0				@ exit = retornar 0	
 	pop {pc}
 
 id_cmd_p:
@@ -89,7 +89,7 @@ id_cmd_p:
 	cmp r0, #0				@ testamos se o resultado de str_cmp foi -1, 0 e 1 antes de recuperarmos o primeiro parâmetro (r0)
 	pop {r0}
 	bne id_cmd_nr				@ se a string recebida for lexograficamente diferente de "p", ela não é um dos 7 comandos
-	ldr r0, #5				@ p = retornar 5	
+	mov r0, #5				@ p = retornar 5	
 	pop {pc}
 
 id_cmd_regs:
@@ -100,7 +100,7 @@ id_cmd_regs:
 	pop {r0}
 	bmi id_cmd_exit				@ se a string recebida for lexograficamente menor que "regs", testamos "exit"
 	bgt id_cmd_sn				@ se a string recebida for lexograficamente maior que "regs", testamos "sn"
-	ldr r0, #6				@ regs = retornar 6	
+	mov r0, #6				@ regs = retornar 6	
 	pop {pc}
 
 id_cmd_si:
@@ -110,7 +110,7 @@ id_cmd_si:
 	cmp r0, #0				@ testamos se o resultado de str_cmp foi -1, 0 e 1 antes de recuperarmos o primeiro parâmetro (r0)
 	pop {r0}
 	bne id_cmd_nr				@ se a string recebida for lexograficamente diferente de "si", ela não é um dos 7 comandos
-	ldr r0, #1				@ si = retornar 1	
+	mov r0, #1				@ si = retornar 1	
 	pop {pc}
 
 id_cmd_sn:
@@ -121,7 +121,7 @@ id_cmd_sn:
 	pop {r0}
 	bmi id_cmd_si				@ se a string recebida for lexograficamente menor que "sn", testamos "si"
 	bgt id_cmd_stw				@ se a string recebida for lexograficamente maior que "sn", testamos "stw"
-	ldr r0, #2				@ sn = retornar 2	
+	mov r0, #2				@ sn = retornar 2	
 	pop {pc}
 	
 id_cmd_stw:
@@ -131,11 +131,11 @@ id_cmd_stw:
 	cmp r0, #0				@ testamos se o resultado de str_cmp foi -1, 0 e 1 antes de recuperarmos o primeiro parâmetro (r0)
 	pop {r0}
 	bne id_cmd_nr				@ se a string recebida for lexograficamente diferente de "stw", ela não é um dos 7 comandos
-	ldr r0, #4				@ stw = retornar 4	
+	mov r0, #4				@ stw = retornar 4	
 	pop {pc}
 
 id_cmd_nr:
-	ldr r0, #7				@ não reconhecido = retornar 7	
+	mov r0, #7				@ não reconhecido = retornar 7	
 	pop {pc}
 
 .globl my_strcmp
