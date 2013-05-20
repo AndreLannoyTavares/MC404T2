@@ -10,6 +10,10 @@
 
 .globl get_cmd @<------
 
+.data
+	max_bytes:	.word 150
+	read_data:	.space 150
+
 .text
 @ Implementação da função get_cmd
 @ Parametros:
@@ -22,10 +26,25 @@
 get_cmd:
         push {lr}
 
-	@ Seta os argumentos da syscall read
-	@ Chama a syscall read para ler a entrada pradão
+get_cmd_loop:
 
+	mov r0, #0				@ Seta os argumentos da syscall read
+	ldr r1, =read_data
+	ldr r2, =max_bytes
+	ldr r2, [r2]
+	mov r7, #4
+	svc 0					@ Chama a syscall read para ler a entrada pradão
 
+	@ lê a primeira palavra do buffer e coloca em r0
+
+	bl id_cmd	@ calcula o código da palavra
+
+	@ se o código for 2, 4 ou 5, continua lendo a string para encontrar o primeiro argumento
+
+	@ se o código for 4, continua lendo a string para encontrar o segundo argumento
+
+	cmp r0, #8
+	bne get_cmd_loop			@ Enquanto o código for diferente de 8(eof), espera a próxima entrada
 
 	pop {pc}
 
@@ -33,7 +52,7 @@ get_cmd:
         @ ###### Identifica o comando ######
 
 
-.globl id_cmd @<------
+.globl id_cmd 
 
 .data
 

@@ -9,7 +9,15 @@ p1:
 	gcc main.c -g -c 
 	gcc main.o strutils.o -g -o p1
 
+interface.o:
+	as interface.s -g -o interface.o
+
+teste.o:
+	gcc teste.c -g -c
+
 teste:
 	as interface.s -g -o interface.o
 	gcc teste.c -g -c
 	gcc teste.o interface.o -g -o teste
+
+.PHONY: teste p1 p2
