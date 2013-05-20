@@ -8,7 +8,7 @@
         @ ###### get_cmd ######
 
 
-.globl get_cmd @<------
+.globl get_cmd 
 
 .data
 	max_bytes:	.word 150
